@@ -79,10 +79,10 @@ namespace MADSPack.Compression
                         spriteEnd = true;
                         break;
                     }
-                    if (cmd == 255)
+                    if (cmd == TRANSPARENT_COLOUR_INDEX)
                     {
                         while (x2++ < width)
-                            _outputStream.WriteByte((byte)255);
+                            _outputStream.WriteByte(TRANSPARENT_COLOUR_INDEX);
                         newLine = true;
                     }
                     else
@@ -90,10 +90,10 @@ namespace MADSPack.Compression
                         while (x2 < width)
                         {
                             cmd = bufStream.ReadByte();
-                            if (cmd == 255)
+                            if (cmd == TRANSPARENT_COLOUR_INDEX)
                             {
                                 while (x2++ < width)
-                                    _outputStream.WriteByte((byte)255);
+                                    _outputStream.WriteByte(TRANSPARENT_COLOUR_INDEX);
                                 newLine = true;
                                 break;
                             }
@@ -101,7 +101,7 @@ namespace MADSPack.Compression
                             while (cmd-- > 0)
                             {
                                 if (x2 < width)
-                                    _outputStream.WriteByte(v != 253 ? (byte)v : (byte)255);
+                                    _outputStream.WriteByte(v != 253 ? (byte)v : TRANSPARENT_COLOUR_INDEX);
                                 x2++;
                             }
                         }
@@ -109,10 +109,10 @@ namespace MADSPack.Compression
                         while (x2 < width)
                         {
                             cmd = bufStream.ReadByte();
-                            if (cmd == 255)
+                            if (cmd == TRANSPARENT_COLOUR_INDEX)
                             {
                                 while (x2++ < width)
-                                    _outputStream.WriteByte((byte)255);
+                                    _outputStream.WriteByte(TRANSPARENT_COLOUR_INDEX);
                                 newLine = true;
                                 break;
                             }
@@ -123,18 +123,18 @@ namespace MADSPack.Compression
                                 while (cmd-- > 0)
                                 {
                                     if (x2 < width)
-                                        _outputStream.WriteByte(v != 253 ? (byte)v : (byte)255);
+                                        _outputStream.WriteByte(v != 253 ? (byte)v : TRANSPARENT_COLOUR_INDEX);
                                     x2++;
                                 }
                             }
                             else
                             {
-                                _outputStream.WriteByte(cmd != 253 ? (byte)cmd : (byte)255);
+                                _outputStream.WriteByte(cmd != 253 ? (byte)cmd : TRANSPARENT_COLOUR_INDEX);
                                 x2++;
                             }
                         }
                     if (!newLine)
-                        while (bufStream.ReadByte() != 255) ;
+                        while (bufStream.ReadByte() != TRANSPARENT_COLOUR_INDEX) ;
                 }
 
                 if (!spriteEnd)
@@ -150,7 +150,7 @@ namespace MADSPack.Compression
                 {
                     long missingLength = (long)(height * width) - _outputStream.Length;
                     for (int i = 0; (long)i < missingLength; i++)
-                        _outputStream.WriteByte((byte)255);
+                        _outputStream.WriteByte(TRANSPARENT_COLOUR_INDEX);
 
                     _outputStream.Flush();
                 }
@@ -195,7 +195,7 @@ namespace MADSPack.Compression
 
                     // @BUGFIX
                     //int a = idx == 255 || idx == 0 ? 0 : 255;
-                    int a = idx == 255 ? 0 : 255;
+                    int a = idx == TRANSPARENT_COLOUR_INDEX ? 0 : TRANSPARENT_COLOUR_INDEX;
 
                     int r = this.getPaletteData()[idx * 3] * 4;
                     int g = this.getPaletteData()[(idx * 3) + 1] * 4;
@@ -215,8 +215,6 @@ namespace MADSPack.Compression
         private short[] widthsPadded;
         private short pictureCount;
         private byte[] spriteImageData;
-        private const int TRANSPARENT_COLOUR_INDEX = 255;
-        public string pathtoCol;
-
+        private const byte TRANSPARENT_COLOUR_INDEX = 255;
     }
 }

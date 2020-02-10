@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -7,6 +6,8 @@ namespace MADSPack.Compression
 {
     public class MadsPackReader
     {
+        private static string madsPackString = "MADSPACK";
+
         /* member class not found */
 
 
@@ -37,9 +38,9 @@ namespace MADSPack.Compression
 
         public bool isCompressed(FileStream stream)
         {
-            byte[] tempBuffer = new byte[8];
+            byte[] tempBuffer = new byte[madsPackString.Length];
             stream.Seek(0, SeekOrigin.Begin);
-            return stream.Read(tempBuffer, 0, tempBuffer.Length) == 8 && (Encoding.ASCII.GetString(tempBuffer).Trim() == "MADSPACK");
+            return stream.Read(tempBuffer, 0, tempBuffer.Length) == 8 && (Encoding.ASCII.GetString(tempBuffer).Trim() == madsPackString);
         }
 
         public int getCount()
@@ -118,8 +119,7 @@ namespace MADSPack.Compression
         private MadsPackEntry[] items;
         private FileType type;
         private int count;
-        private static string madsPackString = "MADSPACK";
-        private FileStream mStream;
+        private readonly FileStream mStream;
     }
 
     public enum FileType
